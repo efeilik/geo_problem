@@ -1,4 +1,4 @@
-package com.weatherapp.geo_spring.DTO;
+package com.weatherapp.geo_spring.dto.request;
 
 import lombok.Data;
 

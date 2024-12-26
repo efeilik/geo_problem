@@ -1,9 +1,7 @@
 package com.weatherapp.geo_spring.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.weatherapp.geo_spring.enums.Role;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +17,12 @@ public class User {
 
     private String name;
     private String email;
+    private String password;
     private String address;
 
     private double latitude;
     private double longitude;
+
+    @Enumerated(EnumType.STRING) // Enum'ı String olarak sakla
+    private Role role;
 }

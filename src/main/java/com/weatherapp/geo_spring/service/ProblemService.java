@@ -17,7 +17,7 @@ public class ProblemService implements IProblemService {
     private final IGoogleService googleService;
 
     @Override
-    public void save(ProblemRequest problemRequest) {
+    public void create(ProblemRequest problemRequest) {
         GoogleApiResponse response = googleService.getGeocodingData(problemRequest.getAddress());
 
         double latitude = response.getResults().get(0).getGeometry().getLocation().getLat();
@@ -34,7 +34,7 @@ public class ProblemService implements IProblemService {
     }
 
     @Override
-    public List<Problem> findAll() {
+    public List<Problem> readAll() {
         return problemRepository.findAll();
     }
 }

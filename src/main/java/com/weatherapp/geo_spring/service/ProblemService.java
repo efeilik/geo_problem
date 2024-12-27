@@ -2,6 +2,7 @@ package com.weatherapp.geo_spring.service;
 
 import com.weatherapp.geo_spring.dto.request.ProblemRequest;
 import com.weatherapp.geo_spring.dto.response.GoogleApiResponse;
+import com.weatherapp.geo_spring.messaging.RabbitMQProducer;
 import com.weatherapp.geo_spring.model.Problem;
 import com.weatherapp.geo_spring.model.ProblemUser;
 import com.weatherapp.geo_spring.model.User;
@@ -24,6 +25,7 @@ public class ProblemService implements IProblemService {
     private final IEmailService emailService;
     private final IUserService userService;
     private final IProblemUserService problemUserService;
+    private final RabbitMQProducer rabbitMQProducer;
 
     @Override
     public void save(ProblemRequest problemRequest) {
@@ -40,9 +42,8 @@ public class ProblemService implements IProblemService {
         problem.setTaken(false);
         problem.setUniqueCode(UUID.randomUUID().toString());
         problemRepository.save(problem);
+        rabbitMQProducer.sendMessage(problem);
 
-        List<User> nearbyUsers = userService.findNearbyUsers(problem.getLatitude(), problem.getLongitude(), 5.0);
-        emailService.sendEmailsForProblem(problem, nearbyUsers);
     }
 
     @Override

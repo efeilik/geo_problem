@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,7 +21,6 @@ public class ProblemService implements IProblemService {
 
     private final ProblemRepository problemRepository;
     private final IGoogleService googleService;
-    private final IEmailService emailService;
     private final IUserService userService;
     private final IProblemUserService problemUserService;
     private final RabbitMQProducer rabbitMQProducer;

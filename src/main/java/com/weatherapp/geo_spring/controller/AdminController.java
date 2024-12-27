@@ -2,6 +2,7 @@ package com.weatherapp.geo_spring.controller;
 
 import com.weatherapp.geo_spring.dto.request.ProblemRequest;
 import com.weatherapp.geo_spring.dto.request.UserRequest;
+import com.weatherapp.geo_spring.service.IEmailService;
 import com.weatherapp.geo_spring.service.IProblemService;
 import com.weatherapp.geo_spring.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class AdminController {
 
     private final IProblemService problemService;
     private final IUserService userService;
+    private final IEmailService emailService;
 
     @PostMapping("problems")
     public ResponseEntity<String> addProblem(@RequestBody ProblemRequest problemRequest) {

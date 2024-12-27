@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService {
@@ -16,6 +19,7 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IGoogleService googleService;
+    private final IDistanceCalculator distanceCalculator;
 
     @Override
     public void createUser(UserRequest userRequest) {
@@ -35,5 +39,14 @@ public class UserService implements IUserService {
         user.setLongitude(longitude);
 
         userRepository.save(user);
+    }
+
+    public List<User> findNearbyUsers(double problemLat, double problemLng, double radiusKm) {
+        return userRepository.findAll().stream()
+                .filter(user -> {
+                    double distance = distanceCalculator.calculateDistance(problemLat, problemLng, user.getLatitude(), user.getLongitude());
+                    return distance <= radiusKm;
+                })
+                .collect(Collectors.toList());
     }
 }

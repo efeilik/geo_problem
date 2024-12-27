@@ -23,4 +23,5 @@ public class Problem {
     private boolean isTaken;
     private double latitude;
     private double longitude;
+    private String uniqueCode;
 }

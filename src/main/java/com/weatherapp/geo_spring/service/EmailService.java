@@ -50,7 +50,9 @@ public class EmailService implements IEmailService {
                 "<p>Yakın çevrenizde yeni bir problem bildirildi:</p>" +
                 "<p><strong>Problem Açıklaması:</strong> " + problem.getDescription() + "</p>" +
                 "<p>Konum: " + problem.getAddress() + "</p>" +
-                "<p>Eğer bu problemi çözmek istiyorsanız, lütfen uygulamayı kullanarak tek kullanımlık kodla talep edin.</p>" +
+                "<p>Eğer bu problemi çözmek istiyorsanız, lütfen uygulamayı kullanarak aşağıda yer alan kodla talep edin.</p>" +
+                "<br>" +
+                "<p><strong>"+ problem.getUniqueCode() +"</strong></p>" +
                 "<br>" +
                 "<p>Teşekkürler,</p>" +
                 "</body>" +

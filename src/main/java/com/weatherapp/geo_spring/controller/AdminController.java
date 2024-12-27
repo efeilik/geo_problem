@@ -16,12 +16,11 @@ public class AdminController {
 
     private final IProblemService problemService;
     private final IUserService userService;
-    private final IEmailService emailService;
 
     @PostMapping("problems")
     public ResponseEntity<String> addProblem(@RequestBody ProblemRequest problemRequest) {
         System.out.println(problemRequest);
-        problemService.create(problemRequest);
+        problemService.save(problemRequest);
         return ResponseEntity.ok("Problem is succesfully added");
     }
 

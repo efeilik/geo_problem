@@ -23,6 +23,6 @@ public class User {
     private double latitude;
     private double longitude;
 
-    @Enumerated(EnumType.STRING) // Enum'ı String olarak sakla
+    @Enumerated(EnumType.STRING)
     private Role role;
 }

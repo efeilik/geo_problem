@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface IProblemService {
 
-    void create(ProblemRequest problemRequest);
+    void save(ProblemRequest problemRequest);
 
     List<Problem> readAll();
+
+    void takeProblem(String email, String uniqueCode);
 }

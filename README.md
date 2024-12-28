@@ -34,8 +34,8 @@ This section will guide you through setting up and running the **Problem Managem
 To begin, clone the project repository from GitHub and navigate to directory
 
 ```console
-git clone https://github.com/yourusername/problem-management-system.git
-cd problem-management-system
+git clone https://github.com/efeilik/geo_problem.git
+cd geo_problem
 ```
 
 ### 2. Build and Run with Docker

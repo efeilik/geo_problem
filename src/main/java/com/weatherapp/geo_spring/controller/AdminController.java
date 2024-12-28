@@ -30,6 +30,11 @@ public class AdminController {
         return ResponseEntity.ok(problemService.readAll().toString());
     }
 
+    @GetMapping("users")
+    public ResponseEntity<String> getAllUsers() {
+        return ResponseEntity.ok(userService.readAll().toString());
+    }
+
     @PostMapping("users")
     public ResponseEntity<String> addUser(@RequestBody @Valid UserRequest userRequest) {
         try {

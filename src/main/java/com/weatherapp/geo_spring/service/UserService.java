@@ -6,6 +6,8 @@ import com.weatherapp.geo_spring.enums.Role;
 import com.weatherapp.geo_spring.model.User;
 import com.weatherapp.geo_spring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IGoogleService googleService;
@@ -24,6 +27,12 @@ public class UserService implements IUserService {
 
     @Override
     public void createUser(UserRequest userRequest) {
+        Optional<User> existingUser = this.findUserByEmail(userRequest.getEmail());
+
+        if (existingUser.isPresent()) {
+            log.info("Email already exists: " + existingUser.get().getEmail());
+            throw new IllegalStateException("Email is used: " + userRequest.getEmail());
+        }
         GoogleApiResponse response = googleService.getGeocodingData(userRequest.getAddress());
 
         double latitude = response.getResults().get(0).getGeometry().getLocation().getLat();
@@ -42,8 +51,9 @@ public class UserService implements IUserService {
         userRepository.save(user);
     }
 
+    @Override
     public List<User> findNearbyUsers(double problemLat, double problemLng, double radiusKm) {
-        return userRepository.findAll().stream()
+        return this.readAll().stream()
                 .filter(user -> {
                     double distance = distanceCalculator.calculateDistance(problemLat, problemLng, user.getLatitude(), user.getLongitude());
                     return distance <= radiusKm;
@@ -59,5 +69,10 @@ public class UserService implements IUserService {
     @Override
     public void saveUser(User user){
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> readAll() {
+        return userRepository.findAll();
     }
 }

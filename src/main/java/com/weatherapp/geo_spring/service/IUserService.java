@@ -11,4 +11,5 @@ public interface IUserService {
     List<User> findNearbyUsers(double problemLat, double problemLng, double radiusKm);
     Optional<User> findUserByEmail(String email);
     void saveUser(User user);
+    List<User> readAll();
 }

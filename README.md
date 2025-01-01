@@ -5,7 +5,7 @@ This project implements a problem management system where problems can be claime
 
 ## Features
 - **Problem Management**: Users can claim problems using a unique code.
-- **Session-Based Authentication**: Secure API endpoints with session-based authentication.
+- **JWT Authentication**: Secure API endpoints with JWT authentication.
 - **Message Queueing with RabbitMQ**: When a problem is created, users within a defined radius of the problem's location are notified via RabbitMQ.
 - **Database**: MySQL is used for storing user and problem information.
 
@@ -13,7 +13,7 @@ This project implements a problem management system where problems can be claime
 - **Spring Boot**: Framework for building the backend.
 - **RabbitMQ**: Message broker for handling asynchronous communication.
 - **MySQL**: Relational database for storing user and problem data.
-- **Session-Based Authentication**: For securing endpoints and user authentication.
+- **JWT**: For securing endpoints and user authentication.
 
 ## Tools Required
 
@@ -65,23 +65,26 @@ docker-compose down
 
 ## 1. Login
 
-**URL**: `/login`
+**URL**: `/auth/login`
 
 **Method**: `POST`
 
-**Description**: Authenticates a user and returns a session token for subsequent requests.
+**Description**: Authenticates a user and returns a bearer token for subsequent requests.
 
 ### Request Parameters:
-- **Body** (application/x-www-form-urlencoded):
-    - `username`: _string_ (Required) - The user's email address.(admin)
+- **Body** (application/json):
+    - `email`: _string_ (Required) - The user's email address.(admin)
     - `password`: _string_ (Required) - The user's password. (admin)
 
 ### Request Example:
 
 ```http
-POST /login
-Content-Type: application/x-www-form-urlencoded
-username=admin&password=admin
+POST /auth/login
+Content-Type: application/json
+{
+  "email": "admin",
+  "password": "admin"
+}
 ```
 
 # 2. Admin - Create a User
@@ -119,7 +122,7 @@ Content-Type: application/json
 }
 ```
 ### Authentication
-This endpoint requires session-based authentication.
+This endpoint requires authentication.
 
 # 3. Admin - Get All Users
 
@@ -138,7 +141,7 @@ Allows the admin to view all users in the system.
 GET /admin/users
 ```
 ### Authentication
-This endpoint requires session-based authentication.
+This endpoint requires authentication.
 
 # 4. Admin - Create a Problem
 
@@ -172,7 +175,7 @@ Content-Type: application/json
 ```
 
 ### Authentication
-This endpoint requires session-based authentication.
+This endpoint requires authentication.
 
 # 5. Admin - Get All Problems
 
@@ -191,7 +194,7 @@ GET /admin/problems
 ```
 
 ### Authentication
-This endpoint requires session-based authentication.
+This endpoint requires authentication.
 
 # 6. Claim a Problem by Unique Code
 
@@ -216,7 +219,7 @@ Allows a user to claim a problem using a unique code.
 POST /problems/54736770-7120-485c-ace1-d1d64c3e326b
 ```
 ### Authentication
-This endpoint requires session-based authentication.
+This endpoint requires authentication.
 
 # 7. Get My Problems (Problems Claimed by User)
 
@@ -234,7 +237,7 @@ Allows a user to retrieve all the problems they have claimed.
 GET /problems/myProblems
 ```
 ### Authentication
-This endpoint requires session-based authentication.
+This endpoint requires authentication.
 
 
 

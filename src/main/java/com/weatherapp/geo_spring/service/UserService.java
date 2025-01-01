@@ -26,7 +26,7 @@ public class UserService implements IUserService {
     private final IDistanceCalculator distanceCalculator;
 
     @Override
-    public void createUser(UserRequest userRequest) {
+    public User createUser(UserRequest userRequest) {
         Optional<User> existingUser = this.findUserByEmail(userRequest.getEmail());
 
         if (existingUser.isPresent()) {
@@ -49,6 +49,7 @@ public class UserService implements IUserService {
         user.setLongitude(longitude);
 
         userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -67,8 +68,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void saveUser(User user){
+    public User saveUser(User user){
         userRepository.save(user);
+        return user;
     }
 
     @Override

@@ -32,14 +32,9 @@ public class ProblemController {
     }
 
     @GetMapping("myProblems")
-    public ResponseEntity<String> takenProblemByUser(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails) {
-        try {
+    public ResponseEntity<List<ProblemUser>> takenProblemByUser(@AuthenticationPrincipal org.springframework.security.core.userdetails.User userDetails) {
             String email = userDetails.getUsername();
-            List<ProblemUser> problems = problemUserService.getProblemsByUserEmail(email);
-            return ResponseEntity.ok("All problems taken by User." + problems);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+            return ResponseEntity.ok(problemUserService.getProblemsByUserEmail(email));
     }
 
 }

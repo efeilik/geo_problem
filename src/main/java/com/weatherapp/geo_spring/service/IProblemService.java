@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IProblemService {
 
-    void save(ProblemRequest problemRequest);
+    Problem save(ProblemRequest problemRequest);
 
     List<Problem> readAll();
 

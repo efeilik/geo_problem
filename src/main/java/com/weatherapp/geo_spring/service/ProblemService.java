@@ -26,7 +26,7 @@ public class ProblemService implements IProblemService {
     private final RabbitMQProducer rabbitMQProducer;
 
     @Override
-    public void save(ProblemRequest problemRequest) {
+    public Problem save(ProblemRequest problemRequest) {
         GoogleApiResponse response = googleService.getGeocodingData(problemRequest.getAddress());
 
         double latitude = response.getResults().get(0).getGeometry().getLocation().getLat();
@@ -42,6 +42,7 @@ public class ProblemService implements IProblemService {
         problemRepository.save(problem);
         rabbitMQProducer.sendMessage(problem);
 
+        return problem;
     }
 
     @Override

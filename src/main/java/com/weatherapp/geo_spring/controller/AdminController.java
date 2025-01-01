@@ -2,6 +2,8 @@ package com.weatherapp.geo_spring.controller;
 
 import com.weatherapp.geo_spring.dto.request.ProblemRequest;
 import com.weatherapp.geo_spring.dto.request.UserRequest;
+import com.weatherapp.geo_spring.model.Problem;
+import com.weatherapp.geo_spring.model.User;
 import com.weatherapp.geo_spring.service.IEmailService;
 import com.weatherapp.geo_spring.service.IProblemService;
 import com.weatherapp.geo_spring.service.IUserService;
@@ -9,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -19,29 +23,22 @@ public class AdminController {
     private final IUserService userService;
 
     @PostMapping("problems")
-    public ResponseEntity<String> addProblem(@RequestBody @Valid ProblemRequest problemRequest) {
-        System.out.println(problemRequest);
-        problemService.save(problemRequest);
-        return ResponseEntity.ok("Problem is succesfully added");
+    public ResponseEntity<Problem> addProblem(@RequestBody @Valid ProblemRequest problemRequest) {
+        return ResponseEntity.ok(problemService.save(problemRequest));
     }
 
     @GetMapping("problems")
-    public ResponseEntity<String> getAllProblems() {
-        return ResponseEntity.ok(problemService.readAll().toString());
+    public ResponseEntity<List<Problem>> getAllProblems() {
+        return ResponseEntity.ok(problemService.readAll());
     }
 
     @GetMapping("users")
-    public ResponseEntity<String> getAllUsers() {
-        return ResponseEntity.ok(userService.readAll().toString());
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.readAll());
     }
 
     @PostMapping("users")
-    public ResponseEntity<String> addUser(@RequestBody @Valid UserRequest userRequest) {
-        try {
-            userService.createUser(userRequest);
-            return ResponseEntity.ok("User is successfully created");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error occurred: " + e.getMessage());
-        }
+    public ResponseEntity<User> addUser(@RequestBody @Valid UserRequest userRequest) {
+            return ResponseEntity.ok(userService.createUser(userRequest));
     }
 }

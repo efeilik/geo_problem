@@ -3,6 +3,9 @@ package com.weatherapp.geo_spring.service;
 import com.weatherapp.geo_spring.dto.request.ProblemRequest;
 import com.weatherapp.geo_spring.dto.response.GoogleApiResponse;
 import com.weatherapp.geo_spring.enums.Role;
+import com.weatherapp.geo_spring.exceptions.ProblemNotFoundException;
+import com.weatherapp.geo_spring.exceptions.ProblemTakenException;
+import com.weatherapp.geo_spring.exceptions.UserNotFoundException;
 import com.weatherapp.geo_spring.messaging.RabbitMQProducer;
 import com.weatherapp.geo_spring.model.Problem;
 import com.weatherapp.geo_spring.model.ProblemUser;
@@ -101,9 +104,9 @@ class ProblemServiceTest {
     }
 
     @Test
-    void takeProblem_ShouldThrowException_WhenProblemAlreadyTaken() {
+    void takeProblem_ShouldThrowProblemTakenException_WhenProblemAlreadyTaken() {
+        String email = "test@test.com";
         String uniqueCode = UUID.randomUUID().toString();
-        String email = "test@example.com";
 
         Problem problem = new Problem();
         problem.setUniqueCode(uniqueCode);
@@ -111,26 +114,26 @@ class ProblemServiceTest {
 
         when(problemRepository.findByUniqueCode(uniqueCode)).thenReturn(problem);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        ProblemTakenException exception = assertThrows(ProblemTakenException.class, () -> {
             problemService.takeProblem(email, uniqueCode);
         });
 
-        assertEquals("Problem already taken or not found", exception.getMessage());
+        assertEquals("Problem has already been taken", exception.getMessage());
         verify(problemUserService, never()).createProblemUser(any(ProblemUser.class));
     }
 
     @Test
     void takeProblem_ShouldThrowException_WhenProblemNotFound() {
-        String uniqueCode = "test";
         String email = "test@test.com";
+        String uniqueCode = UUID.randomUUID().toString();
 
         when(problemRepository.findByUniqueCode(uniqueCode)).thenReturn(null);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        ProblemNotFoundException exception = assertThrows(ProblemNotFoundException.class, () -> {
             problemService.takeProblem(email, uniqueCode);
         });
 
-        assertEquals("Problem already taken or not found", exception.getMessage());
+        assertEquals("Could not find problem with unique code: " + uniqueCode, exception.getMessage());
         verify(problemUserService, never()).createProblemUser(any(ProblemUser.class));
     }
 
@@ -146,7 +149,7 @@ class ProblemServiceTest {
         when(problemRepository.findByUniqueCode(uniqueCode)).thenReturn(problem);
         when(userService.findUserByEmail(email)).thenReturn(Optional.empty());
 
-        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> {
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             problemService.takeProblem(email, uniqueCode);
         });
 

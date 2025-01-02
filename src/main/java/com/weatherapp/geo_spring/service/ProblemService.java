@@ -2,6 +2,9 @@ package com.weatherapp.geo_spring.service;
 
 import com.weatherapp.geo_spring.dto.request.ProblemRequest;
 import com.weatherapp.geo_spring.dto.response.GoogleApiResponse;
+import com.weatherapp.geo_spring.exceptions.ProblemNotFoundException;
+import com.weatherapp.geo_spring.exceptions.ProblemTakenException;
+import com.weatherapp.geo_spring.exceptions.UserNotFoundException;
 import com.weatherapp.geo_spring.messaging.RabbitMQProducer;
 import com.weatherapp.geo_spring.model.Problem;
 import com.weatherapp.geo_spring.model.ProblemUser;
@@ -48,9 +51,14 @@ public class ProblemService implements IProblemService {
     @Override
     public void takeProblem(String email, String uniqueCode) {
         Problem problem = problemRepository.findByUniqueCode(uniqueCode);
-        if (problem != null && ! problem.isTaken()) {
+        if(problem == null) {
+            throw new ProblemNotFoundException(uniqueCode);
+        }
+        if(problem.isTaken()){
+            throw new ProblemTakenException();
+        }
             User user = userService.findUserByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+                    .orElseThrow(() -> new UserNotFoundException(email));
 
             ProblemUser problemUser = new ProblemUser();
             problemUser.setProblem(problem);
@@ -62,9 +70,7 @@ public class ProblemService implements IProblemService {
             problem.setTaken(true);
             problemRepository.save(problem);
 
-        } else {
-            throw new RuntimeException("Problem already taken or not found");
-        }
+
     }
 
     @Override

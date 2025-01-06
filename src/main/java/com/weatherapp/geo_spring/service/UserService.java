@@ -3,6 +3,7 @@ package com.weatherapp.geo_spring.service;
 import com.weatherapp.geo_spring.dto.request.UserRequest;
 import com.weatherapp.geo_spring.dto.response.GoogleApiResponse;
 import com.weatherapp.geo_spring.enums.Role;
+import com.weatherapp.geo_spring.exceptions.UserFoundException;
 import com.weatherapp.geo_spring.model.User;
 import com.weatherapp.geo_spring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class UserService implements IUserService {
 
         if (existingUser.isPresent()) {
             log.info("Email already exists: " + existingUser.get().getEmail());
-            throw new IllegalStateException("Email is used: " + userRequest.getEmail());
+            throw new UserFoundException(userRequest.getEmail());
         }
         GoogleApiResponse response = googleService.getGeocodingData(userRequest.getAddress());
 
